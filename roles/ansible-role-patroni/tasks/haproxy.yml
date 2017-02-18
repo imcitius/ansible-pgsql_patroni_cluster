@@ -1,0 +1,23 @@
+---
+
+- name: Install haproxy
+  yum: name={{ item }} state=latest
+  tags: 
+    - patroni
+    - haproxy
+  with_items:
+    - haproxy
+  when: install is defined
+
+- name: put config
+  template: src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg backup=yes
+  tags: 
+    - patroni
+    - haproxy
+  
+- name: restart and enable
+  service: name=haproxy state=restarted enabled=yes
+  tags: 
+    - patroni
+    - haproxy
+

@@ -1,0 +1,31 @@
+---
+
+- name: Install keepalived
+  yum: name={{ item }} state=latest
+  tags: 
+    - patroni
+    - keepalived
+  with_items:
+    - keepalived
+  when: install is defined
+
+- name: put alert script
+  template: src=alert.sh.j2 dest=/usr/local/sbin/alert.sh backup=no mode=755
+  tags: 
+    - patroni
+    - keepalived
+  when: install is defined
+
+- name: put config
+  template: src=keepalived.conf.j2 dest=/etc/keepalived/keepalived.conf backup=yes
+  tags: 
+    - patroni
+    - keepalived
+  
+- name: restart and enable
+  service: name=keepalived state=restarted enabled=yes
+  tags: 
+    - patroni
+    - keepalived
+
+

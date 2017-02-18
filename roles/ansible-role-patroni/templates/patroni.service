@@ -1,0 +1,33 @@
+
+# This is an example systemd config file for Patroni
+# You can copy it to "/etc/systemd/system/patroni.service",
+
+[Unit]
+Description=Runners to orchestrate a high-availability PostgreSQL
+After=syslog.target network.target
+
+[Service]
+Type=simple
+
+User=postgres
+Group=postgres
+
+# Where to send early-startup messages from the server
+# This is normally controlled by the global default set by systemd
+# StandardOutput=syslog
+
+Environment=PATH=PATH=/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/var/lib/pgsql/bin:/usr/pgsql-9.6/bin
+
+ExecStart=/opt/patroni/patroni.py /etc/patroni/postgres.yml
+
+# only kill the patroni process, not it's children, so it will gracefully stop postgres
+KillMode=process
+
+# Give a reasonable amount of time for the server to start up/shut down
+TimeoutSec=10
+
+# Do not restart the service if it crashes, we want to manually inspect database on failure
+Restart=no
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,64 @@
+---
+
+- name: Import Postgresql96 repo
+  yum: name=https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm state=present
+  tags: patroni
+  when: install is defined
+  
+- name: Install PGsql96
+  yum: name={{ item }} state=latest
+  tags: patroni
+  with_items:
+    - postgresql96
+    - postgresql96-contrib
+    - postgresql96-server
+    - python-psycopg2
+    - repmgr96
+  when: install is defined
+
+- name: install python packages
+  pip: name={{ item }}
+  tags: patroni
+  with_items:
+    - python-etcd
+    - python-consul
+    - dnspython
+    - boto
+    - mock
+    - requests
+    - six
+    - kazoo
+    - click
+    - tzlocal
+    - prettytable
+    - PyYAML
+  tags: patroni
+  when: install is defined
+
+- name: checkout patroni
+  git: repo=https://orbitumdev.ru/citius/patroni-zalando.git dest=/opt/patroni
+  tags: patroni
+  when: install is defined
+  
+- name: create /etc/patroni
+  file: state=directory dest=/etc/patroni
+  tags: patroni
+  when: install is defined
+  
+- name: put postgres.yml
+  template: src=postgres.yml.j2 dest=/etc/patroni/postgres.yml backup=yes
+  tags: patroni
+  
+- name: put patroni.service systemd unit
+  template: src=patroni.service dest=/etc/systemd/system/patroni.service backup=yes
+  tags: patroni
+  when: install is defined
+  
+- name: Reload daemon definitions
+  command: /usr/bin/systemctl daemon-reload
+  tags: patroni
+  
+- name: restart
+  service: name=patroni state=restarted enabled=yes
+  tags: patroni
+

@@ -1,0 +1,25 @@
+global
+maxconn 800
+
+defaults
+log global
+mode tcp
+retries 2
+timeout client 30m
+timeout connect 4s
+timeout server 30m
+timeout check 5s
+
+frontend ft_postgresql
+bind *:5000
+default_backend postgres-patroni
+
+backend postgres-patroni
+  option httpchk
+
+  http-check expect status 200
+  default-server inter 3s fall 3 rise 2
+
+  server {{ patroni_node_name }} {{ patroni_node_name }}.local:5432 maxconn 300 check port 8008
+  server {{ patroni_node_name }} {{ patroni_node_name }}.local:5432 maxconn 300 check port 8008
+  server {{ patroni_node_name }} {{ patroni_node_name }}.local:5432 maxconn 300 check port 8008

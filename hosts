@@ -1,0 +1,5 @@
+[pgsql]
+cluster-pgsql-01.local
+cluster-pgsql-02.local
+cluster-pgsql-03.local
+

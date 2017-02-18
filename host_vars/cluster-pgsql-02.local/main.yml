@@ -1,0 +1,16 @@
+---
+
+# consul service directory
+patroni_scope: "cluster-pgsql"
+patroni_node_name: cluster_pgsql_02
+patroni_rest_password: flsdjkfasdjhfsd
+# superuser
+patroni_postgres_password: flsdjkfasdjhfsd
+# replicator
+patroni_replicator_password: flsdjkfasdjhfsd
+
+keepalived_priority: 100
+cluster_virtual_ip: 192.xx.xx.125
+
+timezone: "Europe/Moscow"
+

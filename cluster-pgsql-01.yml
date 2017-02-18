@@ -1,0 +1,18 @@
+---
+- hosts: cluster-pgsql-01.local
+
+  pre_tasks:
+    - name: Setting system hostname
+      hostname: name="{{ ansible_host }}"
+
+    - include: tasks/essentialsoftware.yml
+    - include: tasks/open-vm-tools.yml
+    - include: tasks/kernel4.yml
+    - include: tasks/ntpd.yml
+
+  post_tasks:
+    - include: tasks/zabbix.yml
+
+  roles:
+     - ansible-role-patroni
+
