@@ -1,0 +1,13 @@
+---
+
+- name: Install open VM tools for VMWARE
+  yum: name={{ item }} state=latest
+  tags: open-vm-tools
+  with_items:
+   - open-vm-tools
+
+
+- name: VmWare service start and enabling
+  service: name=vmtoolsd.service state=started enabled=yes
+  tags: open-vm-tools
+  

@@ -1,0 +1,43 @@
+---
+
+- name: Install essential software
+  yum: name={{ item }} state=latest
+  tags: software
+  with_items:
+   - ntpdate
+   - bzip2
+   - zip
+   - unzip
+   - openssl-devel
+   - mc
+   - vim
+   - atop
+   - wget
+   - mytop
+   - screen
+   - net-tools
+   - rsync
+   - psmisc
+   - gdb
+   - subversion
+   - htop
+   - bind-utils
+   - sysstat
+   - nano
+   - iptraf
+   - nethogs
+   - ngrep
+   - tcpdump
+   - lm_sensors
+   - mtr
+   - s3cmd
+   - psmisc
+   - gcc
+   - git
+   - python2-pip
+   - python-devel
+
+- name: install the 'Development tools' package group
+  yum:
+    name: "@Development tools"
+    state: present

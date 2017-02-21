@@ -1,0 +1,81 @@
+---
+
+    - name: set zabbix ip external
+      set_fact:
+        zabbix_ip: 132.xx.xx.98
+      tags: zabbix
+
+    - name: set zabbix ip internal
+      set_fact:
+        zabbix_ip: 192.168.xx.98
+      when: ansible_all_ipv4_addresses | ipaddr('192.168.0.0/16')
+      tags: zabbix
+
+    - name: Import Zabbix3 repo
+      yum: name=http://repo.zabbix.com/zabbix/3.0/rhel/7/x86_64/zabbix-release-3.0-1.el7.noarch.rpm state=present
+      tags: zabbix
+
+    - name: Remove old zabbix
+      yum: name=zabbix2* state=absent
+      tags: zabbix
+
+    - name: Install zabbix-agent software
+      yum: name={{ item }} state=latest
+      tags: zabbix
+      with_items:
+        - zabbix-agent
+        - zabbix-release
+
+    - name: Creates directories
+      file: path={{ item }}  state=directory
+      tags: 
+      - zabbix
+      - zabbix-mysql
+      with_items:
+        - /etc/zabbix/externalscripts
+        - /etc/zabbix/zabbix_agentd.d
+        - /var/lib/zabbix
+
+    - name: Copy scripts
+      copy: src=/etc/ansible/templates/zabbix/{{ item }} dest=/etc/zabbix/externalscripts/{{ item }} owner=zabbix group=zabbix  mode=0755
+      tags: zabbix
+      with_items:
+        - netstat.sh
+        - iostat.sh
+        - iostat2.sh
+        - iostat_collect.sh
+        - iostat_parse.sh
+        - php_workers_discovery.sh
+
+    - name: Copy .my.cnf
+      copy: src=/etc/ansible/files/mysql/.my.cnf dest=/var/lib/zabbix/.my.cnf owner=zabbix group=zabbix  mode=0700
+      tags: 
+      - zabbix
+      - zabbix-mysql
+
+
+    - name: Copy pdns configs
+      template: src=/etc/ansible/templates/zabbix/{{ item }} dest=/etc/zabbix/zabbix_agentd.d/{{ item }} owner=zabbix group=zabbix
+      tags: zabbix
+      with_items:
+        - pdns.conf
+        - pdns_recursor.conf
+
+    - name: remove default configs
+      file: path={{ item }} state=absent
+      tags: zabbix
+      with_items:
+        - /etc/zabbix_agentd.conf
+        - /etc/zabbix/zabbix_agentd.conf
+
+    - name: zabbix-agentd.conf
+      template: src=/etc/ansible/templates/zabbix/zabbix_agentd.tpl dest=/etc/zabbix_agentd.conf owner=zabbix group=zabbix force=yes
+      tags: zabbix
+
+    - name: zabbix-agentd.conf
+      file: src=/etc/zabbix_agentd.conf dest=/etc/zabbix/zabbix_agentd.conf state=link
+      tags: zabbix
+
+    - name: zabbix-agent enable
+      service: name=zabbix-agent state=restarted enabled=yes
+      tags: zabbix

@@ -1,0 +1,40 @@
+---
+    
+    - name: setting default timezone
+      set_fact:
+        timezone: name=Europe/Moscow
+      when: timezone is not defined
+
+    - name: setting TZ
+      timezone: name={{ timezone }}
+      when: timezone is defined
+      tags:
+      - tz
+      - tweaks
+      - ntp
+      - ntpd
+
+    - name: Configurating cron for ntpdate
+      cron: name="ntpdate" minute="*/5" job="/usr/sbin/ntpdate pool.ntp.org"
+      tags:
+      - tz
+      - tweaks
+      - ntp
+      - ntpd
+
+    - name: ntpd stop and disable
+      service: name=ntpd state=stopped enabled=no
+      tags:
+      - tz
+      - tweaks
+      - ntp
+      - ntpd
+      ignore_errors: yes
+
+    - name: crond restart and enabled
+      service: name=crond state=restarted enabled=yes
+      tags:
+      - tz
+      - tweaks
+      - ntp
+      - ntpd
