@@ -1,0 +1,1 @@
+/usr/sbin/ss -an | grep $2 | wc -l
