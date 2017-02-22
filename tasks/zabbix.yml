@@ -47,20 +47,6 @@
         - iostat_parse.sh
         - php_workers_discovery.sh
 
-    - name: Copy .my.cnf
-      copy: src=/etc/ansible/files/mysql/.my.cnf dest=/var/lib/zabbix/.my.cnf owner=zabbix group=zabbix  mode=0700
-      tags: 
-      - zabbix
-      - zabbix-mysql
-
-
-    - name: Copy pdns configs
-      template: src=/etc/ansible/templates/zabbix/{{ item }} dest=/etc/zabbix/zabbix_agentd.d/{{ item }} owner=zabbix group=zabbix
-      tags: zabbix
-      with_items:
-        - pdns.conf
-        - pdns_recursor.conf
-
     - name: remove default configs
       file: path={{ item }} state=absent
       tags: zabbix
