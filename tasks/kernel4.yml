@@ -1,0 +1,9 @@
+---
+
+- name: Install new kernel
+  yum: name=kernel-ml enablerepo=elrepo-kernel
+  tags: kernel4
+
+- name: enable boot with new kernel
+  shell: grub2-set-default 0
+  tags: kernel4

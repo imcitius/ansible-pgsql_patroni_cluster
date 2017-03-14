@@ -32,7 +32,6 @@
     - tzlocal
     - prettytable
     - PyYAML
-  tags: patroni
   when: install is defined
 
 - name: checkout patroni

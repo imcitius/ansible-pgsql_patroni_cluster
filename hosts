@@ -4,8 +4,10 @@ cluster-pgsql-02.local
 cluster-pgsql-03.local
 
 [pgsql:vars]
-patroni_scope: "cluster-pgsql"
-patroni_rest_password: flsdjkfasdjhfsd
-patroni_postgres_password: flsdjkfasdjhfsd
-patroni_replicator_password: flsdjkfasdjhfsd
-cluster_virtual_ip: 192.xx.xx.125
+patroni_scope=cluster-pgsql
+patroni_rest_password=flsdjkfasdjhfsd
+patroni_postgres_password=flsdjkfasdjhfsd
+patroni_replicator_password=flsdjkfasdjhfsd
+
+# please set you VIP here
+cluster_virtual_ip="192.xx.xx.125"

@@ -1,5 +1,11 @@
 ---
 
+- name: Enabling epel repository
+  yum: name={{ item }} state=latest
+  tags: software
+  with_items:
+   - epel-release
+
 - name: Install essential software
   yum: name={{ item }} state=latest
   tags: software
