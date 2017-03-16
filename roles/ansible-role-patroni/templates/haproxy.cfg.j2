@@ -20,6 +20,6 @@ backend postgres-patroni
   http-check expect status 200
   default-server inter 3s fall 3 rise 2
 
-  server {{ patroni_node_name }} {{ patroni_node_name }}.local:5432 maxconn 300 check port 8008
-  server {{ patroni_node_name }} {{ patroni_node_name }}.local:5432 maxconn 300 check port 8008
-  server {{ patroni_node_name }} {{ patroni_node_name }}.local:5432 maxconn 300 check port 8008
+  server cluster-pgsql-01 cluster-pgsql-01.local:5432 maxconn 300 check port 8008
+  server cluster-pgsql-02 cluster-pgsql-02.local:5432 maxconn 300 check port 8008
+  server cluster-pgsql-03 cluster-pgsql-03.local:5432 maxconn 300 check port 8008
